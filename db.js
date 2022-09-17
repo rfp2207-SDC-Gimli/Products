@@ -43,5 +43,20 @@ const getRelated = (request, response) => {
 })
 };
 
+const getStyles = (request, response) => {
+  pool.query(`SELECT product.id,
+  json_agg(json_build_object('id', styles.id, 'name', styles.name, 'sale_price', styles.sale_price, 'original_price', styles.original_price, 'default_style', styles.default_style, 'photos', (SELECT json_agg(json_build_object('url', photos.url, 'thumbnail_url', photos.thumbnail_url)) FROM photos WHERE photos."styleId" = styles.id), 'skus', (SELECT json_agg(json_build_object('size', skus.size, 'quantity', skus.quantity)) FROM skus WHERE skus."styleId" = styles.id))) AS styles
+FROM product
+JOIN styles ON product.id = styles."productId"
+GROUP BY product.id
+LIMIT 1`, (err, res) => {
+  if (err) {
+    throw err
+  }
+  response.status(200).json(res.rows[0])
+})
+};
 
-module.exports = {getProduct, getProducts, getRelated};
+
+
+module.exports = {getProduct, getProducts, getRelated, getStyles};
