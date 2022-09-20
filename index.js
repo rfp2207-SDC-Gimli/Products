@@ -13,9 +13,9 @@ app.get('/', (req, res) => {
 })
 
 app.get('/products', db.getProducts)
-app.get('/products/productid', db.getProduct)
-app.get('/products/productid/related', db.getRelated)
-app.get('/products/productid/styles', db.getStyles)
+app.get('/products/:product_id', db.getProduct)
+app.get('/products/:product_id/related', db.getRelated)
+app.get('/products/:product_id/styles', db.getStyles)
 
 
 app.listen(port, () => {
